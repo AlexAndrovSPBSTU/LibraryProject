@@ -20,8 +20,10 @@
             margin-bottom: 10px;
         }
 
-        a {
+        .book {
             color: #007bff;
+            font-size: 14px;
+            font-weight: bold;
             text-decoration: none;
         }
 
@@ -52,12 +54,12 @@
 <body>
 <h1>Show reader</h1>
 
-<p th:text="${reader.getName() + ' (' + reader.getBirthday() + ')'}">VALUE</p>
+<p th:text="${reader.getName() + ' (' + reader.getBirthday().toString() + ')'}">VALUE</p>
 <hr>
 
 <p th:if="${books.size()!=0}">Books:</p>
 <div th:each="book : ${books}" th:if="${books.size()!=0}">
-    <a th:text="${book.getTitle() + ' (' + book.getAuthor() + ')'}"></a>
+    <p class="book" th:text="${book.getTitle() + ' (' + book.getAuthor() + ')'}"></p>
 </div>
 
 <div th:unless="${books.size()!=0}">
@@ -67,15 +69,15 @@
 <hr>
 <br>
 <form th:method="GET" th:action="@{/readers/{id}/edit(id=${reader.getId()})}">
-    <input type="submit" value="Edit" />
+    <input type="submit" value="Edit"/>
 </form>
 <br>
 <form th:method="DELETE" th:action="@{/readers/{id}(id=${reader.getId()})}">
-    <input type="submit" value="Delete" />
+    <input type="submit" value="Delete"/>
 </form>
 <br>
 <form action="/readers">
-    <input type="submit" value="Get back" />
+    <input type="submit" value="Get back"/>
 </form>
 </body>
 </html>

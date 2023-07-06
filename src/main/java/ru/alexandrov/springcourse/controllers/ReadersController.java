@@ -6,32 +6,34 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.alexandrov.springcourse.dao.ReadersDAO;
 import ru.alexandrov.springcourse.models.Reader;
+import ru.alexandrov.springcourse.services.ReadersService;
 import ru.alexandrov.springcourse.util.ReaderValidator;
+
+import java.util.Date;
 
 @Controller
 @RequestMapping("/readers")
 public class ReadersController {
-    private final ReadersDAO readersDAO;
-    private final ReaderValidator readerValidator;
+    private final ReadersService readersService;
+//    private final ReaderValidator readerValidator;
 
     @Autowired
-    public ReadersController(ReadersDAO readersDAO, ReaderValidator readerValidator) {
-        this.readersDAO = readersDAO;
-        this.readerValidator = readerValidator;
+    public ReadersController(ReadersService readersService, ReaderValidator readerValidator) {
+        this.readersService = readersService;
+//        this.readerValidator = readerValidator;
     }
 
     @GetMapping()
     public String index(Model model) {
-        model.addAttribute("readers", readersDAO.index());
+        model.addAttribute("readers", readersService.index());
         return "readers/index";
     }
 
     @GetMapping("/{id}")
     public String show(@PathVariable("id") int id, Model model) {
-        model.addAttribute("reader", readersDAO.show(id));
-        model.addAttribute("books",readersDAO.getReaderBooks(id));
+        model.addAttribute("reader", readersService.show(id));
+        model.addAttribute("books", readersService.getReaderBooks(id));
         return "readers/show";
     }
 
@@ -42,34 +44,37 @@ public class ReadersController {
 
     @PostMapping()
     public String save(@ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
-        readerValidator.validate(reader, bindingResult);
+//        readerValidator.validate(reader, bindingResult);
         if (bindingResult.hasErrors()) {
             return "readers/new";
         }
-        System.out.println(reader);
-        readersDAO.save(reader);
+        readersService.save(reader);
         return "redirect:/readers";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        readersDAO.delete(id);
+        readersService.delete(id);
         return "redirect:/readers";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        model.addAttribute("reader", readersDAO.show(id));
+        Reader reader = readersService.show(id);
+        model.addAttribute("reader", reader);
         return "readers/edit";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("reader")@Valid Reader reader, @PathVariable("id") int id,BindingResult bindingResult) {
-        readerValidator.validate(reader, bindingResult);
+    @PatchMapping
+    public String update(@ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
+//        readerValidator.validate(reader, bindingResult);
         if (bindingResult.hasErrors()) {
             return "readers/edit";
         }
-        readersDAO.update(reader, id);
+//        System.out.println("created_at " + reader.getCreated_at().toString());
+//        reader.setCreated_at(new Date());
+        System.out.println(reader);
+        readersService.update(reader);
         return "redirect:/readers";
     }
 }

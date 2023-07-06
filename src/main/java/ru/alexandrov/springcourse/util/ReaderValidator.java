@@ -4,15 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import ru.alexandrov.springcourse.dao.ReadersDAO;
 import ru.alexandrov.springcourse.models.Reader;
+import ru.alexandrov.springcourse.services.ReadersService;
 
 @Component
 public class ReaderValidator implements Validator {
-    private final ReadersDAO readersDAO;
+    private final ReadersService readersDAO;
 
     @Autowired
-    public ReaderValidator(ReadersDAO readersDAO) {
+    public ReaderValidator(ReadersService readersDAO) {
         this.readersDAO = readersDAO;
     }
 
@@ -24,8 +24,8 @@ public class ReaderValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Reader reader = (Reader) target;
-        if (readersDAO.show(reader.getName()).isPresent()){
-            errors.rejectValue("name","","Reader with this name is already exist");
+        if (readersDAO.findReaderByName(reader.getName()).isPresent()) {
+            errors.rejectValue("name", "", "Reader with this name is already exist");
         }
     }
 }

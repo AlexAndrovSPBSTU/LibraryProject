@@ -12,63 +12,66 @@ import java.util.List;
 
 @Component
 public class BooksDAO {
-    private final SessionFactory sessionFactory;
+//    private final SessionFactory sessionFactory;
 
-    @Autowired
-    public BooksDAO(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+//    @Autowired
+//    public BooksDAO(SessionFactory sessionFactory) {
+//        this.sessionFactory = sessionFactory;
+//    }
 
     @Transactional
     public List<Book> index() {
-        Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("select b from Book b", Book.class).getResultList();
+//        Session session = sessionFactory.getCurrentSession();
+//        return session.createQuery("select b from Book b", Book.class).getResultList();
+        return null;
     }
 
     @Transactional
     public Book show(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Book.class, id);
+//        Session session = sessionFactory.getCurrentSession();
+//        return session.get(Book.class, id);
+        return null;
     }
 
     @Transactional
     public void save(Book book) {
-        Session session = sessionFactory.getCurrentSession();
-        session.persist(book);
+//        Session session = sessionFactory.getCurrentSession();
+//        session.persist(book);
     }
 
     @Transactional
     public void delete(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        session.remove(show(id));
+//        Session session = sessionFactory.getCurrentSession();
+//        session.remove(show(id));
     }
 
     @Transactional
     public void update(Book updatedBook, int id) {
-        Session session = sessionFactory.getCurrentSession();
-        Book oldBook = session.get(Book.class, id);
-        oldBook.setAuthor(updatedBook.getAuthor());
-        oldBook.setTitle(updatedBook.getTitle());
-        oldBook.setYear(updatedBook.getYear());
+//        Session session = sessionFactory.getCurrentSession();
+//        Book oldBook = session.get(Book.class, id);
+//        oldBook.setAuthor(updatedBook.getAuthor());
+//        oldBook.setTitle(updatedBook.getTitle());
+//        oldBook.setYear(updatedBook.getYear());
     }
 
     @Transactional
     public Reader getBookOwner(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        return session.get(Book.class, id).getOwner();
+//        Session session = sessionFactory.getCurrentSession();
+//        return session.get(Book.class, id).getOwner();
+        return null;
     }
 
     @Transactional
     public void free(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        session.get(Book.class, id).setOwner(null);
+//        Session session = sessionFactory.getCurrentSession();
+//        session.get(Book.class, id).setOwner(null);
     }
 
     @Transactional()
     public void assign(int bookId, int readerId) {
-        Session session = sessionFactory.getCurrentSession();
-        Reader reader = session.get(Reader.class, readerId);
-        Book book = session.get(Book.class, bookId);
-        book.setOwner(reader);
+//        Session session = sessionFactory.getCurrentSession();
+//        Reader reader = session.get(Reader.class, readerId);
+//        Book book = session.get(Book.class, bookId);
+//        book.setOwner(reader);
     }
 }

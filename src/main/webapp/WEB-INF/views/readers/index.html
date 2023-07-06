@@ -88,8 +88,7 @@
 
     <div th:each="reader : ${readers}" class="reader">
         <a th:href="@{/readers/{id}(id=${reader.getId()})}">
-            <div class="reader-name" th:text="${reader.getName()}"></div>
-            <div class="reader-birthday" th:text="${'(' + reader.getBirthday() + ')'}"></div>
+            <div class="reader-name" th:text="${reader.getName()}"></div><div class="reader-birthday" th:text="${'(' + reader.getBirthday().toString() + ')'}"></div>
         </a>
     </div>
 

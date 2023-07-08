@@ -6,22 +6,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.alexandrov.springcourse.models.Membership;
 import ru.alexandrov.springcourse.models.Reader;
 import ru.alexandrov.springcourse.services.ReadersService;
 import ru.alexandrov.springcourse.util.ReaderValidator;
-
-import java.util.Date;
 
 @Controller
 @RequestMapping("/readers")
 public class ReadersController {
     private final ReadersService readersService;
-//    private final ReaderValidator readerValidator;
+    private final ReaderValidator readerValidator;
 
     @Autowired
     public ReadersController(ReadersService readersService, ReaderValidator readerValidator) {
         this.readersService = readersService;
-//        this.readerValidator = readerValidator;
+        this.readerValidator = readerValidator;
     }
 
     @GetMapping()
@@ -38,13 +37,14 @@ public class ReadersController {
     }
 
     @GetMapping("/new")
-    public String create(@ModelAttribute("reader") Reader reader) {
+    public String create(@ModelAttribute("reader") Reader reader, Model model) {
+        model.addAttribute("memberships", Membership.values());
         return "readers/new";
     }
 
     @PostMapping()
     public String save(@ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
-//        readerValidator.validate(reader, bindingResult);
+        readerValidator.validate(reader, bindingResult);
         if (bindingResult.hasErrors()) {
             return "readers/new";
         }
@@ -60,20 +60,17 @@ public class ReadersController {
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable("id") int id, Model model) {
-        Reader reader = readersService.show(id);
-        model.addAttribute("reader", reader);
+        model.addAttribute("memberships", Membership.values());
+        model.addAttribute("reader", readersService.show(id));
         return "readers/edit";
     }
 
     @PatchMapping
     public String update(@ModelAttribute("reader") @Valid Reader reader, BindingResult bindingResult) {
-//        readerValidator.validate(reader, bindingResult);
+        readerValidator.validate(reader, bindingResult);
         if (bindingResult.hasErrors()) {
             return "readers/edit";
         }
-//        System.out.println("created_at " + reader.getCreated_at().toString());
-//        reader.setCreated_at(new Date());
-        System.out.println(reader);
         readersService.update(reader);
         return "redirect:/readers";
     }

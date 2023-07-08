@@ -88,7 +88,8 @@
 
     <div th:each="reader : ${readers}" class="reader">
         <a th:href="@{/readers/{id}(id=${reader.getId()})}">
-            <div class="reader-name" th:text="${reader.getName()}"></div><div class="reader-birthday" th:text="${'(' + reader.getBirthday().toString() + ')'}"></div>
+            <div class="reader-name" th:text="${reader.getName() + ' ' + reader.membership}"></div>
+            <div class="reader-birthday" th:text="${'(' + reader.getBirthday().toString() + ')'}"></div>
         </a>
     </div>
 
@@ -98,13 +99,13 @@
     <div class="buttons-container">
         <div class="form-container">
             <form action="/readers/new">
-                <input type="submit" value="Create New" class="btn" />
+                <input type="submit" value="Create New" class="btn"/>
             </form>
         </div>
 
         <div class="form-container">
-            <form action="/books">
-                <input type="submit" value="Go to Books" class="btn" />
+            <form action="/books?page=0">
+                <input type="submit" value="Go to Books" class="btn"/>
             </form>
         </div>
     </div>

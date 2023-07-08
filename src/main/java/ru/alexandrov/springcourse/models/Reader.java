@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -18,21 +17,16 @@ public class Reader {
     @NotEmpty(message = "Name must not be empty")
     @Column(name = "name")
     private String name;
-    @Column(name = "birthday")
-//    @NotEmpty(message = "Birthday must not be empty")
+
     @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date birthday;
 
-    // TODO: 06.07.2023 thymeleaf doesn't support timestamp, i guess
-//    @Column(name = "created_at")
-//    @Temporal(TemporalType.TIMESTAMP)
-//    private Date created_at;
+    @Enumerated(EnumType.ORDINAL)
+    private Membership membership;
 
-    // TODO: 06.07.2023 books shouldn't be uploaded eagerly, it has to be fixed in future
-    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "owner")
     private List<Book> books;
-
     public Reader(String name, Date birthday) {
         this.name = name;
         this.birthday = birthday;
@@ -72,14 +66,6 @@ public class Reader {
         return birthday;
     }
 
-//    public Date getCreated_at() {
-//        return created_at;
-//    }
-
-//    public void setCreated_at(Date created_at) {
-//        this.created_at = created_at;
-//    }
-
     public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
@@ -90,5 +76,13 @@ public class Reader {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Membership getMembership() {
+        return membership;
+    }
+
+    public void setMembership(Membership membership) {
+        this.membership = membership;
     }
 }

@@ -63,6 +63,13 @@
     <input type="text" id="birthday" th:field="*{birthday}"/>
     <div class="error-message" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday error</div>
     <br>
+    <label for="membership">Set the type of the membership</label>
+    <select th:object="${reader}" th:field="*{membership}" id="membership">
+        <option th:each="mem:${memberships}" th:value="${mem}"
+                th:text="${mem}"></option>
+        <option th:value="${null}" th:text="None"></option>
+    </select>
+    <br>
     <input type="submit" value="Save">
 </form>
 

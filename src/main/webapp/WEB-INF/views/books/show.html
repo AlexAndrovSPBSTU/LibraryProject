@@ -56,7 +56,8 @@
 <h1>Show book</h1>
 
 <p th:text="${book.getTitle() + ' (' + book.getAuthor() + ')'}">VALUE</p>
-
+<p style="color:red;" th:if="${book.isOverdue()}">Book is overdue</p>
+<!--when we update variable of an object,we have to create separate another object of that variable,intialize it inside html, and then update in code-->
 <div th:if="${owner==null}">
     <p>Book is free</p>
     <form th:method="PATCH" th:action="@{/books/{id}/assign(id=${book.getId()})}">

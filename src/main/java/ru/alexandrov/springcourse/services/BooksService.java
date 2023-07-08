@@ -2,13 +2,15 @@ package ru.alexandrov.springcourse.services;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.alexandrov.springcourse.models.Book;
 import ru.alexandrov.springcourse.models.Reader;
 import ru.alexandrov.springcourse.repositories.BooksRepository;
 import ru.alexandrov.springcourse.repositories.ReadersRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,11 +53,25 @@ public class BooksService {
     }
 
     public void free(int id) {
-        Objects.requireNonNull(booksRepository.findById(id).orElse(null)).setOwner(null);
+        booksRepository.findById(id).orElse(null).setOwner(null);
+        booksRepository.findById(id).orElse(null).setDateTake(null);
     }
 
     public void assign(int bookId, int readerId) {
-        Objects.requireNonNull(booksRepository.findById(bookId).orElse(null)).
-                setOwner(readersRepository.findById(readerId).orElse(null));
+        Book book = booksRepository.findById(bookId).orElse(null);
+        book.setOwner(readersRepository.findById(readerId).orElse(null));
+        book.setDateTake(new Date());
+    }
+
+    public List<Book> findByQuery(String query) {
+        return booksRepository.findByTitleStartingWithIgnoreCase(query);
+    }
+
+    public List<Book> findByQueryWithSorting(String query, Sort sort) {
+        return booksRepository.findByTitleStartingWithIgnoreCase(query, sort);
+    }
+
+    public List<Book> findPage(int pageNum, int itemsPerPage) {
+        return booksRepository.findAll(PageRequest.of(pageNum, itemsPerPage)).getContent();
     }
 }

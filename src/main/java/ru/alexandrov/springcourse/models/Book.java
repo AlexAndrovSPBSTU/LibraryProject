@@ -2,6 +2,10 @@ package ru.alexandrov.springcourse.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Entity
 @Table(name = "Book")
@@ -21,6 +25,13 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "owner", referencedColumnName = "id")
     private Reader owner;
+
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "MM/dd/yyyy")
+    @Column(name = "date_take")
+    private Date dateTake;
+    @Transient
+    private boolean overdue;
 
     public Book(String title, String author, String year) {
         this.title = title;
@@ -63,12 +74,28 @@ public class Book {
         this.year = year;
     }
 
+    public Date getDateTake() {
+        return dateTake;
+    }
+
+    public void setDateTake(Date dateTake) {
+        this.dateTake = dateTake;
+    }
+
     public Reader getOwner() {
         return owner;
     }
 
     public void setOwner(Reader owner) {
         this.owner = owner;
+    }
+
+    public boolean isOverdue() {
+        if (dateTake == null) {
+            return false;
+        }
+        return TimeUnit.DAYS.convert(Math.abs(new Date().getTime() - dateTake.getTime())
+                , TimeUnit.MILLISECONDS) > 10;
     }
 
     @Override

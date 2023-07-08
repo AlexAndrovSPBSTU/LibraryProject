@@ -27,11 +27,6 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 
-//@Configuration
-//@ComponentScan("ru.alexandrov.springcourse")
-//@EnableWebMvc
-//@PropertySource("classpath:hibernate.properties")
-//@EnableTransactionManagement
 
 @Configuration
 @ComponentScan("ru.alexandrov.springcourse")

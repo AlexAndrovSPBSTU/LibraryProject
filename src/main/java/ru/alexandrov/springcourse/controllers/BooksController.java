@@ -2,11 +2,13 @@ package ru.alexandrov.springcourse.controllers;
 
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.alexandrov.springcourse.models.Book;
+import ru.alexandrov.springcourse.models.BookSorting;
 import ru.alexandrov.springcourse.models.Reader;
 import ru.alexandrov.springcourse.services.BooksService;
 import ru.alexandrov.springcourse.services.ReadersService;
@@ -24,8 +26,10 @@ public class BooksController {
     }
 
     @GetMapping
-    public String index(Model model) {
-        model.addAttribute("books", booksService.index());
+    public String index(@RequestParam(required = false) Integer page, Model model) {
+        page = (page == null || page < 0) ? 0 : page;
+        model.addAttribute("books", booksService.findPage(page, 2));
+        model.addAttribute("page", page);
         return "books/index";
     }
 
@@ -82,5 +86,17 @@ public class BooksController {
     public String assign(@PathVariable("id") int bookId, @ModelAttribute("reader") Reader reader) {
         booksService.assign(bookId, reader.getId());
         return "redirect:/books";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(required = false) String query, @RequestParam(required = false) BookSorting bookSorting, Model model) {
+        model.addAttribute("bookSortings", BookSorting.values());
+        if (bookSorting == BookSorting.NONE || bookSorting == null) {
+            model.addAttribute("books", booksService.findByQuery(query));
+        } else {
+            model.addAttribute("books", booksService.
+                    findByQueryWithSorting(query, Sort.by(bookSorting.getDirection(), bookSorting.getProperty())));
+        }
+        return "books/search";
     }
 }
